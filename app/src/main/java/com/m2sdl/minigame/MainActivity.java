@@ -1,25 +1,29 @@
 package com.m2sdl.minigame;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Window;
-import android.view.WindowManager.LayoutParams;
-import android.widget.TextView;
+import android.view.WindowManager;
 
-class MainActivity extends Activity {
-
-    public MainActivity() {
-    }
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(
-                LayoutParams.FLAG_FULLSCREEN,
-                LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        TextView txt = new TextView(this);
-        txt.setText("OUI");
-        setContentView(txt);
+        setContentView(new GameView(this));
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+
+        int valeur_y = sharedPref.getInt("valeur_y", 0);
+        valeur_y = (valeur_y + 100) % 400;
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("valeur_y", valeur_y);
+        editor.apply();
     }
 }
