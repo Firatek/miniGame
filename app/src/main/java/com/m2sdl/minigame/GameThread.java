@@ -10,17 +10,17 @@ public class GameThread extends Thread {
     private SurfaceHolder surfaceHolder;
     private GameView gameView;
     private Handler cubeHandler;
+    private Handler cubeHandler1;
     private Runnable createCubeOnTime = new Runnable() {
         @Override
         public void run() {
-            while (running) {
                 canvas = null;
                 try {
                     canvas = surfaceHolder.lockCanvas();
                     synchronized (surfaceHolder) {
-                        gameView.update();
                         gameView.draw(canvas);
                     }
+                    cubeHandler.postDelayed(this, 1000/60);
                 } catch (Exception e) {
                 } finally {
                     if (canvas != null) {
@@ -31,7 +31,14 @@ public class GameThread extends Thread {
                         }
                     }
                 }
-            }
+        }
+    };
+
+    private Runnable moveCube = new Runnable() {
+        @Override
+        public void run() {
+            gameView.update();
+            cubeHandler.postDelayed(this, 1000/20);
         }
     };
 
@@ -44,7 +51,9 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
+
         this.cubeHandler.post(createCubeOnTime);
+        this.cubeHandler.post(moveCube);
     }
 
     public void setRunning(Boolean running) {

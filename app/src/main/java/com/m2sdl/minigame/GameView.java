@@ -52,7 +52,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         x = (x + 1) % 300;
-        viewHandler.postDelayed(this::update, 3000);
     }
 
     @Override
